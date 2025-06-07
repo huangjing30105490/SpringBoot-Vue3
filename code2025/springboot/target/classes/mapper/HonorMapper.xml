@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.HonorMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Honor">
+        select honor.*,
+        teacher.name as teacherName,
+        college.title as collegeTitle
+        from `honor`
+        left join teacher on honor.teacher_id = teacher.id
+        left join college on teacher.college_id = college.id
+        <where>
+            <if test="title != null and title != ''">and honor.title like concat('%', #{title}, '%')</if>
+            <if test="teacherId != null">and honor.teacher_id = #{teacherId}</if>
+        </where>
+        order by honor.id desc
+    </select>
+
+    <insert id="insert">
+        insert into `honor` (file, title, content, time, subject_id, teacher_id, status, reason, level, organizer)
+        values(#{file}, #{title}, #{content}, #{time}, #{subjectId}, #{teacherId}, #{status}, #{reason}, #{level}, #{organizer})
+    </insert>
+
+    <update id="updateById">
+        update `honor` set file = #{file}, title = #{title}, content = #{content}, time = #{time}, subject_id = #{subjectId}, teacher_id = #{teacherId}, status = #{status},
+        reason = #{reason}, level = #{level}, organizer = #{organizer}
+        where id = #{id}
+    </update>
+
+</mapper>

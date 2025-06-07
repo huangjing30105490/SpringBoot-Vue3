@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.BooksMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Books">
+        select books.*,
+        teacher.name as teacherName,
+        college.title as collegeTitle
+        from `books`
+        left join teacher on books.teacher_id = teacher.id
+        left join college on teacher.college_id = college.id
+        <where>
+            <if test="title != null and title != ''">and books.title like concat('%', #{title}, '%')</if>
+            <if test="teacherId != null">and books.teacher_id = #{teacherId}</if>
+        </where>
+        order by books.id desc
+    </select>
+
+    <insert id="insert">
+        insert into `books` (file, title, content, time, subject_id, teacher_id, status, reason, publish)
+        values(#{file}, #{title}, #{content}, #{time}, #{subjectId}, #{teacherId}, #{status}, #{reason}, #{publish})
+    </insert>
+
+    <update id="updateById">
+        update `books` set file = #{file}, title = #{title}, content = #{content}, time = #{time}, subject_id = #{subjectId}, teacher_id = #{teacherId}, status = #{status},
+        reason = #{reason}, publish = #{publish}
+        where id = #{id}
+    </update>
+
+</mapper>

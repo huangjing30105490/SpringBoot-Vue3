@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.TeacherMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Teacher">
+        select teacher.*,
+        college.title as collegeTitle
+        from `teacher`
+        left join college on teacher.college_id = college.id
+        <where>
+            <if test="username != null and username != ''">username like concat('%', #{username}, '%')</if>
+            <if test="name != null and name != ''">and name like concat('%', #{name}, '%')</if>  <!-- 相当于 name like '%1%' -->
+            <if test="id != null">and teacher.id = #{id}</if>
+            <if test="ids != null and ids != ''">
+                and id in
+                <foreach collection="idsArr" open="(" close=")" separator="," item="id">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <insert id="insert">
+        insert into `teacher` (username, password, name, phone, email, role, avatar, title, college_id, employee_id, gender, degree, school, graduate, enrollment, outlook, qualification)
+        values(#{username}, #{password}, #{name}, #{phone}, #{email}, #{role}, #{avatar}, #{title}, #{collegeId}, #{employeeId}, #{gender}, #{degree}, #{school}, #{graduate}, #{enrollment}, #{outlook}, #{qualification})
+    </insert>
+
+    <update id="updateById">
+        update `teacher` set username = #{username}, password = #{password}, name = #{name}, phone = #{phone}, email = #{email}, role = #{role}, avatar = #{avatar}, title = #{title}, college_id = #{collegeId},
+        employee_id = #{employeeId}, gender = #{gender}, degree = #{degree}, school = #{school}, graduate = #{graduate}, enrollment = #{enrollment}, outlook = #{outlook}, qualification = #{qualification}
+        where id = #{id}
+    </update>
+
+</mapper>

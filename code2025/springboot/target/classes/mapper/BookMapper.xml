@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.BookMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Book">
+        select * from `book`
+        <where>
+            <if test="name != null and name != ''">and name like concat('%', #{name}, '%')</if>  <!-- 相当于 name like '%1%' -->
+        </where>
+        order by id desc
+    </select>
+
+    <insert id="insert">
+        insert into `book` (img, name, price, author, num)
+        values(#{img}, #{name}, #{price}, #{author}, #{num})
+    </insert>
+
+    <update id="updateById">
+        update `book` set img = #{img}, name = #{name}, price = #{price}, author = #{author}, num = #{num}
+        where id = #{id}
+    </update>
+
+</mapper>

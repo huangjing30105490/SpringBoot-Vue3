@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ApplyMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Apply">
+        select apply.*, user.name as userName from `apply`
+        left join user on apply.user_id = user.id
+        <where>
+            <if test="title != null and title != ''">and title like concat('%', #{title}, '%')</if>  <!-- 相当于 name like '%1%' -->
+            <if test="userId != null">and user_id = #{userId}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <insert id="insert">
+        insert into `apply` (title, content, time, user_id, status, reason)
+        values(#{title}, #{content}, #{time}, #{userId}, #{status}, #{reason})
+    </insert>
+
+    <update id="updateById">
+        update `apply` set title = #{title}, content = #{content}, time = #{time}, user_id = #{userId}, status = #{status}, reason = #{reason}
+        where id = #{id}
+    </update>
+
+</mapper>
